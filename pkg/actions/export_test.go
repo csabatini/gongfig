@@ -63,7 +63,7 @@ func TestGetServicesAndRoutesPreparedConfig(t *testing.T) {
 
 	defer ts.Close()
 
-	preparedConfig := getPreparedConfig(ts.URL)
+	preparedConfig := getPreparedConfig(ts.URL, "")
 	services := preparedConfig[ServicesPath].([]Service)
 
 	if len(services) != 1 {
@@ -88,7 +88,7 @@ func TestGetCertificatesPreparedConfig(t *testing.T) {
 	ts, _ := getTestServer(CertificatesPath, answerBody)
 	defer ts.Close()
 
-	preparedConfig := getPreparedConfig(ts.URL)
+	preparedConfig := getPreparedConfig(ts.URL, "")
 
 	certificates := reflect.ValueOf(preparedConfig[CertificatesPath])
 
@@ -116,7 +116,7 @@ func TestGetConsumersPreparedConfig(t *testing.T) {
 	ts, _ := getTestServer(ConsumersPath, answerBody)
 	defer ts.Close()
 
-	preparedConfig := getPreparedConfig(ts.URL)
+	preparedConfig := getPreparedConfig(ts.URL, "")
 
 	consumers := reflect.ValueOf(preparedConfig[ConsumersPath])
 
@@ -143,7 +143,7 @@ func TestGetPluginsPreparedConfig(t *testing.T) {
 	ts, _ := getTestServer(PluginsPath, answerBody)
 	defer ts.Close()
 
-	preparedConfig := getPreparedConfig(ts.URL)
+	preparedConfig := getPreparedConfig(ts.URL, "")
 
 	plugins := reflect.ValueOf(preparedConfig[PluginsPath])
 
@@ -158,7 +158,7 @@ func TestGetPluginsPreparedConfig(t *testing.T) {
 
 func TestExportCannotConnect(t *testing.T) {
 	if os.Getenv("CHECK_EXIT") == "1" {
-		flushAll(DefaultURL)
+		flushAll(DefaultURL, "")
 	}
 
 	err := runExit("TestExportCannotConnect")

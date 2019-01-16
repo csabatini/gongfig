@@ -12,7 +12,7 @@ import (
 	"encoding/json"
 )
 
-func flushAll(adminURL string) {
+func flushAll(adminURL string, authKey string) {
 	client := &http.Client{Timeout: Timeout * time.Second}
 
 	// We obtain resources data concurrently and push them to the channel that
@@ -23,7 +23,7 @@ func flushAll(adminURL string) {
 	for _, resource := range Apis {
 		fullPath := getFullPath(adminURL, []string{resource})
 
-		go getResourceListToChan(client, flushData, fullPath, resource)
+		go getResourceListToChan(client, flushData, fullPath, resource, authKey)
 
 	}
 
@@ -98,7 +98,7 @@ func flushResources(client *http.Client, url string, config map[string]Data) {
 }
 
 // Flush - main function that is called by CLI in wipe Kong config
-func Flush(adminURL string) {
+func Flush(adminURL string, authKey string) {
 	fmt.Println("All services and routes will be deleted from kong, are you sure? Write yes or no:")
 	reader := bufio.NewReader(os.Stdin)
 	answer, _ := reader.ReadString('\n')
@@ -107,7 +107,7 @@ func Flush(adminURL string) {
 	answer = answer[0:len(answer)-1]
 
 	if answer== "yes" {
-		flushAll(adminURL)
+		flushAll(adminURL, authKey)
 	} else {
 		fmt.Println("Configuration was not flushed")
 	}
