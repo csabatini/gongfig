@@ -20,7 +20,7 @@ type resourceAnswer struct {
 }
 
 // Prepare config for writing: put routes as nested resources of services, omit unnecessary field etc
-func composeConfig(config map[string]Data, client *http.Client, url string) map[string]interface{} {
+func composeConfig(config map[string]Data, client *http.Client, url string, authKey string) map[string]interface{} {
 	preparedConfig := make(map[string]interface{})
 	serviceMap := make(map[string]*Service)
 
@@ -88,7 +88,7 @@ func composeConfig(config map[string]Data, client *http.Client, url string) map[
 		// Compose path to particular target
 		instancePathElements := []string{UpstreamsPath, upstream.Id, TargetsPath}
 		upstreamTargetsURL := getFullPath(url, instancePathElements)
-		targets := getResourceList(client, upstreamTargetsURL)
+		targets := getResourceList(client, upstreamTargetsURL, authKey)
 
 		for _, item := range targets.Data {
 			mapstructure.Decode(item, &target)
@@ -117,7 +117,7 @@ func composeConfig(config map[string]Data, client *http.Client, url string) map[
 	return preparedConfig
 }
 
-func getPreparedConfig(adminURL string) map[string]interface{} {
+func getPreparedConfig(adminURL string, authKey string) map[string]interface{} {
 	client := &http.Client{Timeout: Timeout * time.Second}
 
 	// We obtain resources data concurrently and push them to the channel that
@@ -128,7 +128,7 @@ func getPreparedConfig(adminURL string) map[string]interface{} {
 	for _, resource := range Apis {
 		fullPath := getFullPath(adminURL, []string{resource})
 
-		go getResourceListToChan(client, writeData, fullPath, resource)
+		go getResourceListToChan(client, writeData, fullPath, resource, authKey)
 
 	}
 
@@ -148,7 +148,7 @@ func getPreparedConfig(adminURL string) map[string]interface{} {
 		// resourcesNum is 0 means all needed resources are collected
 		// and we can prepare config for writing it to a file
 		if resourcesNum == 0 {
-			preparedConfig = composeConfig(config, client, adminURL)
+			preparedConfig = composeConfig(config, client, adminURL, authKey)
 			break
 		}
 	}
@@ -157,8 +157,8 @@ func getPreparedConfig(adminURL string) map[string]interface{} {
 }
 
 // Export - main function that is called by CLI in order to collect Kong config
-func Export(adminURL string, filePath string) {
-	preparedConfig := getPreparedConfig(adminURL)
+func Export(adminURL string, filePath string, authKey string) {
+	preparedConfig := getPreparedConfig(adminURL, authKey)
 
 	jsonAnswer, _ := json.MarshalIndent(preparedConfig, "", "    ")
 	ioutil.WriteFile(filePath, jsonAnswer, 0644)

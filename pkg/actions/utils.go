@@ -26,8 +26,13 @@ func getFullPath(adminURL string, pathElements []string) string {
 	return uri.String()
 }
 
-func getResourceList(client *http.Client, fullPath string) resourceConfig {
-	response, err := client.Get(fullPath)
+func getResourceList(client *http.Client, fullPath string, authKey string) resourceConfig {
+	request, err := http.NewRequest("GET", fullPath, nil)
+	if authKey != "" {
+		request.Header.Set("apikey", authKey)
+	}
+	response, err := client.Do(request)
+
 
 	if err != nil {
 		log.Fatal("Request to Kong admin failed")
@@ -42,8 +47,9 @@ func getResourceList(client *http.Client, fullPath string) resourceConfig {
 }
 
 // Get list of resources by http and pass it to the channel where it will handled further
-func getResourceListToChan(client *http.Client, writeData chan *resourceAnswer, fullPath string, resource string) {
-	body := getResourceList(client, fullPath)
+func getResourceListToChan(client *http.Client, writeData chan *resourceAnswer, fullPath string,
+	resource string, authKey string) {
+	body := getResourceList(client, fullPath, authKey)
 
 	// send only data field for writing in order to write { "service": [items...] } instead of
 	// { "service": {"data": [items...] }}

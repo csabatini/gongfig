@@ -25,6 +25,11 @@ func getApp() *cli.App {
 			Value: "config.yml",
 			Usage: "File for export/import",
 		},
+		cli.StringFlag{
+			Name: "key",
+			Value: "",
+			Usage: "Optional key for admin API with auth plugin enabled",
+		},
 	}
 
 	app.Commands = []cli.Command{
@@ -33,7 +38,7 @@ func getApp() *cli.App {
 			Usage: "Obtain services and routes, write it to the config file",
 			Action: func(c *cli.Context) error {
 				fmt.Println("The configuration is exporting...")
-				actions.Export(c.String("url"), c.String("file"))
+				actions.Export(c.String("url"), c.String("file"), c.String("key"))
 
 				return nil
 			},
