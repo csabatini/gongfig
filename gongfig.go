@@ -5,7 +5,7 @@ import (
 	"os"
 	"log"
 	"fmt"
-	"github.com/romanovskyj/gongfig/pkg/actions"
+	"github.com/csabatini/gongfig/pkg/actions"
 )
 
 func getApp() *cli.App {
