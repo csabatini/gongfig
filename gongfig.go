@@ -59,7 +59,7 @@ func getApp() *cli.App {
 			Name: "flush",
 			Usage: "Delete all services and routes from configuration file to the kong deployment",
 			Action: func(c *cli.Context) error {
-				actions.Flush(c.String("url"))
+				actions.Flush(c.String("url"), c.String("key"))
 
 				return nil
 			},
