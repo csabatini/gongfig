@@ -55,12 +55,18 @@ func getResourceListToChan(client *http.Client, writeData chan *resourceAnswer, 
 	writeData <- &resourceAnswer{resource, body.Data}
 }
 
-func requestNewResource(client *http.Client, resource interface{}, url string) (string, error) {
+func requestNewResource(client *http.Client, resource interface{}, url string, authKey string) (string, error) {
 	body := new(bytes.Buffer)
 	json.NewEncoder(body).Encode(resource)
 
 	// Create services first, as routes are nested resources
-	response, err := client.Post(url, "application/json;charset=utf-8", body)
+	request, err := http.NewRequest("POST", url, body)
+	request.Header.Set("Content-Type", "application/json")
+	if authKey != "" {
+		request.Header.Set("apikey", authKey)
+	}
+
+	response, err := client.Do(request)
 	defer response.Body.Close()
 
 	if err != nil {
@@ -87,7 +93,7 @@ func requestNewResource(client *http.Client, resource interface{}, url string) (
 func addResource(connectionBundle *ConnectionBundle, resource interface{}, Id string, idMap *ConcurrentStringMap) {
 	defer func() { <-connectionBundle.ReqLimitChan}()
 
-	id, err := requestNewResource(connectionBundle.Client, resource, connectionBundle.URL)
+	id, err := requestNewResource(connectionBundle.Client, resource, connectionBundle.URL, connectionBundle.AuthKey)
 
 	if err != nil {
 		log.Fatalf("Failed to create resource, %v\n", err)

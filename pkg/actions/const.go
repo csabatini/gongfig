@@ -146,6 +146,7 @@ type LocalResource struct {
 type ConnectionBundle struct {
 	Client *http.Client
 	URL string
+	AuthKey string
 	ReqLimitChan chan bool
 }
 

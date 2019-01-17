@@ -17,7 +17,7 @@ func getHTTPRequestBundle(url string) *ConnectionBundle {
 	client := &http.Client{Timeout: 1 * time.Second}
 	reqLimitChan := make(chan bool, 5)
 
-	return &ConnectionBundle{client, url,reqLimitChan}
+	return &ConnectionBundle{client, url,"", reqLimitChan}
 }
 
 // Create httpclient, service, chan and run CreateServiceWithRoutes with it
@@ -139,7 +139,7 @@ func TestCertificatesCreated(t *testing.T) {
 		map[string]string{"cert": TestCertificate.Cert},
 	}
 
-	createEntries(connectionBundle.Client, ts.URL, config)
+	createEntries(connectionBundle.Client, ts.URL, "", config)
 
 	if !certificatesCreated {
 		t.Error("Certificate was not created")
@@ -175,7 +175,7 @@ func TestPluginCreated(t *testing.T) {
 		map[string]string{"name": TestPlugin.Name},
 	}
 
-	createEntries(connectionBundle.Client, ts.URL, config)
+	createEntries(connectionBundle.Client, ts.URL, "", config)
 
 	if !pluginCreated {
 		t.Error("Plugin was not created")
@@ -215,7 +215,7 @@ func TestPluginCreatedForCorrespondingService(t *testing.T) {
 		map[string]string{"name": "test-plugin", "service_id": serviceLocalId},
 	}
 
-	createEntries(connectionBundle.Client, ts.URL, config)
+	createEntries(connectionBundle.Client, ts.URL, "", config)
 }
 
 func TestPluginCreatedForCorrespondingRoute(t *testing.T) {
@@ -255,7 +255,7 @@ func TestPluginCreatedForCorrespondingRoute(t *testing.T) {
 		map[string]string{"name": "test-plugin", "route_id": TestEmailService.Routes[0].Id},
 	}
 
-	createEntries(connectionBundle.Client, ts.URL, config)
+	createEntries(connectionBundle.Client, ts.URL, "", config)
 }
 
 func TestServiceCreatedRoutesFailed(t *testing.T) {
