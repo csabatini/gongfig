@@ -65,6 +65,7 @@ func flushResources(client *http.Client, url string, config map[string]Data) {
 				instancePathElements := []string{resourceType, instance.Id}
 				instancePath := strings.Join(instancePathElements, "/")
 				instanceURL := getFullPath(url, []string{instancePath})
+				log.Println("Making delete request ", instanceURL)
 
 				request, _ := http.NewRequest(http.MethodDelete, instanceURL, nil)
 
@@ -84,7 +85,7 @@ func flushResources(client *http.Client, url string, config map[string]Data) {
 						json.NewDecoder(response.Body).Decode(&message)
 						log.Println(message.Message)
 
-						log.Fatal("Was not able to Delete item ", instance.Id)
+						log.Fatal("Was not able to Delete item ", instance.Id, " ", response.StatusCode)
 					}
 				}
 			}(instance)

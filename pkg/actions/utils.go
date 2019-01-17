@@ -65,6 +65,7 @@ func requestNewResource(client *http.Client, resource interface{}, url string, a
 	if authKey != "" {
 		request.Header.Set("apikey", authKey)
 	}
+	log.Println("Making new resource request", url)
 
 	response, err := client.Do(request)
 	defer response.Body.Close()
@@ -79,7 +80,7 @@ func requestNewResource(client *http.Client, resource interface{}, url string, a
 		json.NewDecoder(response.Body).Decode(&message)
 
 		log.Println(message.Message)
-		log.Fatal("Was not able to create resource")
+		log.Fatal("Was not able to create resource", response.StatusCode)
 		return "", err
 	}
 

@@ -143,6 +143,7 @@ func createServiceWithRoutes(requestBundle *ConnectionBundle, service Service, i
 	if err != nil {
 		log.Fatalf("Failed to create service, %v\n", err)
 	}
+	log.Println("Created service", service.Name)
 
 	idMap.Add(id, serviceExternalId)
 
@@ -157,6 +158,8 @@ func createServiceWithRoutes(requestBundle *ConnectionBundle, service Service, i
 		route.Id = ""
 
 		routeExternalId, err := requestNewResource(requestBundle.Client, route, routesURL, requestBundle.AuthKey)
+
+		log.Println("Creating route", id, "-", route.Paths)
 
 		if err != nil {
 			log.Fatalf("Could not create new resource, %v\n", err)
