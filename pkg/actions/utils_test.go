@@ -4,6 +4,7 @@ import (
 	"os/exec"
 	"os"
 	"strings"
+	"testing"
 )
 
 // Run particular test in separate thread and test it exits with non zero value
@@ -21,4 +22,23 @@ func getRoutesURL() string {
 	//Create path /services/<service name>/routes
 	routesPathElements := []string{ServicesPath, TestEmailService.Name, RoutesPath}
 	return strings.Join(routesPathElements, "/")
+}
+
+func TestGetFullPath(t *testing.T) {
+	rootAdminPath := "http://localhost:8001"
+	fullApiPath := getFullPath(rootAdminPath, []string{ServicesPath})
+	expectedApiPath :=  "http://localhost:8001/services"
+
+	if fullApiPath != expectedApiPath {
+		t.Fatal("expected", expectedApiPath, ", got", fullApiPath)
+	}
+
+	subAdminPath := "http://localhost:8001/kong-admin"
+	fullApiPath = getFullPath(subAdminPath, []string{ServicesPath})
+	expectedApiPath =  "http://localhost:8001/kong-admin/services"
+
+	if fullApiPath != expectedApiPath {
+		t.Fatal("expected", expectedApiPath, ", got", fullApiPath)
+	}
+
 }

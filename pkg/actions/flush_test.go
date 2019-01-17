@@ -47,7 +47,7 @@ func TestConfigFlushed(t *testing.T) {
 
 	defer ts.Close()
 
-	flushAll(ts.URL)
+	flushAll(ts.URL, "")
 
 	if !serviceDeleted {
 		t.Error("Service was not deleted")
@@ -62,7 +62,7 @@ func TestConfigFlushed(t *testing.T) {
 
 func TestFlushCannotConnect(t *testing.T) {
 	if os.Getenv("CHECK_EXIT") == "1" {
-		flushAll(DefaultURL)
+		flushAll(DefaultURL, "")
 	}
 
 	err := runExit("TestFlushCannotConnect")
