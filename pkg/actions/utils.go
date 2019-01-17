@@ -27,15 +27,11 @@ func getFullPath(adminURL string, pathElements []string) string {
 }
 
 func getResourceList(client *http.Client, fullPath string, authKey string) resourceConfig {
-	log.Println("Making request to", fullPath)
 	request, err := http.NewRequest("GET", fullPath, nil)
 	if authKey != "" {
 		request.Header.Set("apikey", authKey)
 	}
 	response, err := client.Do(request)
-
-	log.Println("Returned status code", response.StatusCode)
-
 
 	if err != nil {
 		log.Fatal("Request to Kong admin failed")
