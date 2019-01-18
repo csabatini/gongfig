@@ -37,14 +37,14 @@ func flushAll(adminURL string, authKey string) {
 		resourcesNum--
 
 		if resourcesNum == 0 {
-			flushResources(client, adminURL, config)
+			flushResources(client, adminURL, authKey, config)
 			fmt.Println("Done")
 			break
 		}
 	}
 }
 
-func flushResources(client *http.Client, url string, config map[string]Data) {
+func flushResources(client *http.Client, url string, authKey string, config map[string]Data) {
 	// Firstly we need delete routes and only then services,
 	// as routes are nested resources of services
 	for _, resourceType := range Apis {
@@ -68,6 +68,9 @@ func flushResources(client *http.Client, url string, config map[string]Data) {
 				log.Println("Making delete request ", instanceURL)
 
 				request, _ := http.NewRequest(http.MethodDelete, instanceURL, nil)
+				if authKey != "" {
+					request.Header.Set("apikey", authKey)
+				}
 
 				response, err := client.Do(request)
 

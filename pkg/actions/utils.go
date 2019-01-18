@@ -27,7 +27,7 @@ func getFullPath(adminURL string, pathElements []string) string {
 }
 
 func getResourceList(client *http.Client, fullPath string, authKey string) resourceConfig {
-	request, err := http.NewRequest("GET", fullPath, nil)
+	request, _ := http.NewRequest("GET", fullPath, nil)
 	if authKey != "" {
 		request.Header.Set("apikey", authKey)
 	}
@@ -60,7 +60,7 @@ func requestNewResource(client *http.Client, resource interface{}, url string, a
 	json.NewEncoder(body).Encode(resource)
 
 	// Create services first, as routes are nested resources
-	request, err := http.NewRequest("POST", url, body)
+	request, _ := http.NewRequest("POST", url, body)
 	request.Header.Set("Content-Type", "application/json")
 	if authKey != "" {
 		request.Header.Set("apikey", authKey)
