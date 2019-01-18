@@ -38,7 +38,8 @@ type Resource struct {
 // Apis - list of apis for import/export with corresponding structure types for parsing values
 // Be aware it should be in the same order as it is going to be deleted, e.g. firstly we delete
 // routes and then services as route has service foreign key
-var Apis = []string{RoutesPath, ServicesPath, CertificatesPath, ConsumersPath, PluginsPath, UpstreamsPath}
+var Apis = []string{RoutesPath, ServicesPath, CertificatesPath, PluginsPath, UpstreamsPath}
+//var Apis = []string{RoutesPath, ServicesPath, CertificatesPath, ConsumersPath, PluginsPath, UpstreamsPath}
 
 // ExportResourceBundles is a slice of elements with resource path and corresponding struct type
 // in order to store elements in config while exporting using a loop, without duplicating a code.
