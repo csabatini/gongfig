@@ -76,11 +76,12 @@ func requestNewResource(client *http.Client, resource interface{}, url string, a
 	}
 
 	if response.StatusCode != 201 {
-		message := Message{}
-		json.NewDecoder(response.Body).Decode(&message)
-
-		log.Println(message.Message)
-		log.Fatal("Was not able to create resource - ", response.StatusCode, " - ", response.Body)
+		//message := Message{}
+		//json.NewDecoder(response.Body).Decode(&message)
+		//log.Println(message.Message)
+		buf := new(bytes.Buffer)
+		buf.ReadFrom(response.Body)
+		log.Fatal("Was not able to create resource - ", response.StatusCode, " - ", buf.String())
 		return "", err
 	}
 
