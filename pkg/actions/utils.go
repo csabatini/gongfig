@@ -80,7 +80,7 @@ func requestNewResource(client *http.Client, resource interface{}, url string, a
 		json.NewDecoder(response.Body).Decode(&message)
 
 		log.Println(message.Message)
-		log.Fatal("Was not able to create resource", response.StatusCode)
+		log.Fatal("Was not able to create resource - ", response.StatusCode, " - ", response.Body)
 		return "", err
 	}
 
