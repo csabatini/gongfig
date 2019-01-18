@@ -67,7 +67,8 @@ func flushResources(client *http.Client, url string, authKey string, config map[
 				instanceURL := getFullPath(url, []string{instancePath})
 				log.Println("Making delete request ", instanceURL)
 
-				request, _ := http.NewRequest(http.MethodDelete, instanceURL, nil)
+				request, _ := http.NewRequest(http.MethodDelete, instanceURL, strings.NewReader("{}"))
+
 				if authKey != "" {
 					request.Header.Set("apikey", authKey)
 				}
