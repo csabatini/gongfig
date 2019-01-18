@@ -51,9 +51,12 @@ var ExportResourceBundles  = []Resource{
 }
 
 // ImportResourceBundles is the same as ExportResourceBundles but for the import
+//var ImportResourceBundles = []Resource{
+//	{CertificatesPath, &Certificate{}},
+//	{ConsumersPath, &Consumer{}},
+//}
 var ImportResourceBundles = []Resource{
 	{CertificatesPath, &Certificate{}},
-	{ConsumersPath, &Consumer{}},
 }
 
 //Service struct - is used for managing services
